@@ -12,3 +12,12 @@ for gpt_model in ai_models:
     builder.adjust(2)
     
 test_keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='test', callback_data='deepseek')]])
+
+buy_keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='купить подписку', pay=True)]])
+
+# Создаем клавиатуру с кнопками
+keyboard = [
+    [InlineKeyboardButton(text="Подтвердить оплату", callback_data="confirm")],
+    [InlineKeyboardButton(text="Отменить", callback_data="cancel")]
+]
+reply_markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
