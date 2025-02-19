@@ -1,5 +1,4 @@
 from aiogram import Bot, Dispatcher
-from dotenv import load_dotenv
 from handlers.routers import router
 import os
 from decouple import config

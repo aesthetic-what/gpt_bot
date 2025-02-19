@@ -7,8 +7,6 @@ from aiogram.types.star_transaction import StarTransaction
 from handlers.generate import ai_generate
 import handlers.keyboards as kb
 from decouple import config
-from uuid import uuid4
-from datetime import datetime
 
 token = config("TELEGRAM_TOKEN")
 
@@ -69,6 +67,6 @@ async def flood(message: Message):
 @router.message(F.text)
 async def generating(message: Message, state: FSMContext):
     await state.set_state(ClientQuery.query)
-    response = await ai_generate(message.text, 'deepseek/deepseek-chat')
+    response = await ai_generate(message.text, 'mistralai/codestral-2501')
     await message.answer(response, parse_mode="Markdown")
     await state.clear()
