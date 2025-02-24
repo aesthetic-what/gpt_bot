@@ -10,7 +10,7 @@ async def main():
     token = config("TELEGRAM_TOKEN")
     bot = Bot(token=token)
     dp = Dispatcher()
-    dp.include_router(router)
+    dp.include_router(router) 
     await dp.start_polling(bot)
 
 if __name__ == "__main__":

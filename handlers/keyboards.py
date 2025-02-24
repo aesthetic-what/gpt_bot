@@ -10,7 +10,7 @@ for gpt_model in ai_models:
     button = InlineKeyboardButton(text=f'{gpt_model}', callback_data=f"{gpt_model}")
     builder.add(button)
     builder.adjust(2)
-    
+     
 test_keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='test', callback_data='deepseek')]])
 
 buy_keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='купить подписку', pay=True)]])

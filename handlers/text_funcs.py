@@ -11,7 +11,7 @@ def split_text(text, max_length=4096):
             current_part += sentence + " "
         else:
             parts.append(current_part.strip())
-            current_part = sentence + " "
+            current_part = sentence + " " 
 
     if current_part:
         parts.append(current_part.strip())

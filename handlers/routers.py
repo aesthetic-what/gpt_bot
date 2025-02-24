@@ -74,4 +74,4 @@ async def generating(message: Message, state: FSMContext):
         logger.info(f"total_tokens:{total_tokens}")
         await message.answer(response, parse_mode="Markdown")
     finally:
-        await state.clear()
+        await state.clear() 
