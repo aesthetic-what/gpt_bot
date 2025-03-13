@@ -4,17 +4,20 @@ from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from handlers.generate_text import ai_generate
+from handlers.db.routers import create_user, update_content
 import handlers.keyboards as kb
-from decouple import config
+import os
+import re
 import logging
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename='ai_bot.log', 
                     level=logging.INFO, 
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    encoding='utf8')
 
 
-token = config("TELEGRAM_TOKEN")
+token = os.getenv("TELEGRAM_TOKEN")
 
 router = Router()
 bot = Bot(token)
@@ -24,12 +27,25 @@ class ClientQuery(StatesGroup):
 
 @router.message(CommandStart())
 async def hello(message: Message):
+    username = message.from_user.first_name
+    chat_id = message.chat.id
+    
+    await create_user(username, chat_id)
     await message.answer("Привет, выбери гпт для запроса", reply_markup=kb.test_keyboard)
     
     
 # async def test_buy(message: Message):
 #     await message.answer('Тестовая кнопка покупки', reply_markup=kb.buy_keyboard)
-    
+
+async def clear_text(response: str):
+    # Удаление лишних пробелов и переносов строк
+    cleaned_text = re.sub(r'\s+', ' ', response).strip()
+
+    # Экранирование специальных символов
+    escaped_text = cleaned_text.replace("'", "''").replace('"', '""')
+
+    return escaped_text
+
 # @router.pre_checkout_query()
 @router.message(Command('buy'))  
 async def send_invoice_handler(message: Message):
@@ -48,21 +64,27 @@ async def send_invoice_handler(message: Message):
         )
     except IndexError:
         await message.answer("Введите число после команды")
+        
+
 @router.pre_checkout_query()
 async def on_pre_checkout_query(pre_checkout_query: PreCheckoutQuery):
     await bot.answer_pre_checkout_query(pre_checkout_query.id, ok=True)
+
 
 @router.message(F.successful_payment)
 async def success_payment(message: Message):
     await message.answer('спасибо за покупку')
 
+
 @router.callback_query(F.data == 'deepseek')
 async def test_com(call: CallbackQuery):
     await call.message.answer("Введте запрос")
 
+
 @router.message(ClientQuery.query)
 async def flood(message: Message):
     await message.answer("Ваш запрос еще не обработан")
+
 
 @router.message(F.text)
 async def generating(message: Message, state: FSMContext):
@@ -73,5 +95,8 @@ async def generating(message: Message, state: FSMContext):
         logger.info(f"prompt_tokens: {prompt_tokens}")
         logger.info(f"total_tokens:{total_tokens}")
         await message.answer(response, parse_mode="Markdown")
+        formated_text = await clear_text(response)
+        print(response[:100], formated_text)
+        # await update_content(message.chat.id, str(response[:200]))
     finally:
         await state.clear() 

@@ -13,6 +13,8 @@ for gpt_model in ai_models:
      
 test_keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='test', callback_data='deepseek')]])
 
+ai_agent_keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='ai_agent', callback_data='ai_agent')]])
+
 buy_keyboard = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text='купить подписку', pay=True)]])
 
 # Создаем клавиатуру с кнопками

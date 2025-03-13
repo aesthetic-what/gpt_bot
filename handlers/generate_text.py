@@ -1,7 +1,7 @@
 from openai import AsyncOpenAI, OpenAI
 from openai import BadRequestError, AuthenticationError, APIStatusError, RateLimitError
-from decouple import config
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 client = AsyncOpenAI(
   base_url="https://openrouter.ai/api/v1",
-  api_key=config("AI_KEY"),
+  api_key=os.getenv("AI_KEY"),
 )
 # promt = 'Ты программист с огромным опытом программирования и готов поделиться опытом разработки на python, ты используешь фреймворки sqlalchemy, aiogram3, fastapi для разработки крутых продуктов. отвечай на как можно понятнее и кратко'
 # promt = 'Ты самый умный бот в мире, который все знает со всего мира, отвечай на уровне студента колледжа'
@@ -25,9 +25,9 @@ async def ai_generate(text: str, model: str):
               "role": "system",
               "content": promt
             },
-            {"role": "assistant", 
-             "content": "Сегодня понедельник."
-            },
+            # {"role": "assistant", 
+            #  "content": "Сегодня понедельник."
+            # },
             {
             "role": "user",
             "content": text
