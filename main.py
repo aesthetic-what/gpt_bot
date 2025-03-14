@@ -4,11 +4,12 @@ from handlers.db.db_core import init_db
 from dotenv import load_dotenv
 import os
 
-load_dotenv('./.env')
+load_dotenv(override=True)
 
 async def main():
     await init_db()
     token = os.getenv("TELEGRAM_TOKEN")
+    token = "8098085371:AAF08emYK_-erunLp4m2FM1ZPR1NRLvqisk"
     bot = Bot(token=token)
     dp = Dispatcher()
     dp.include_router(router)

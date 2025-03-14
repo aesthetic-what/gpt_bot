@@ -8,6 +8,8 @@ class Users(Base):
     username: Mapped[str]
     tg_id: Mapped[int]
     role: Mapped[str] = mapped_column(default='user')    
+    
+    
 class Content(Base):
     __tablename__ = "content"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)

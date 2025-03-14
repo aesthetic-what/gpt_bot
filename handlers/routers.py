@@ -18,12 +18,14 @@ logging.basicConfig(filename='ai_bot.log',
 
 
 token = os.getenv("TELEGRAM_TOKEN")
+token = "8098085371:AAF08emYK_-erunLp4m2FM1ZPR1NRLvqisk"
 
 router = Router()
 bot = Bot(token)
 
 class ClientQuery(StatesGroup):
     query = State()
+    
 
 @router.message(CommandStart())
 async def hello(message: Message):
@@ -46,7 +48,6 @@ async def clear_text(response: str):
 
     return escaped_text
 
-# @router.pre_checkout_query()
 @router.message(Command('buy'))  
 async def send_invoice_handler(message: Message):
     try:  
@@ -90,13 +91,13 @@ async def flood(message: Message):
 async def generating(message: Message, state: FSMContext):
     await state.set_state(ClientQuery.query)
     try:
-        response, completion_tokens, prompt_tokens, total_tokens = await ai_generate(message.text, 'mistralai/mistral-saba')
+        response, completion_tokens, prompt_tokens, total_tokens = await ai_generate(message.text, 'mistralai/mistral-saba', message.chat.id)
         logger.info(f"completion_tokens: {completion_tokens}")
         logger.info(f"prompt_tokens: {prompt_tokens}")
         logger.info(f"total_tokens:{total_tokens}")
         await message.answer(response, parse_mode="Markdown")
         formated_text = await clear_text(response)
-        print(response[:100], formated_text)
-        # await update_content(message.chat.id, str(response[:200]))
+        print(formated_text)
+        await update_content(message.chat.id, formated_text[:200])
     finally:
         await state.clear() 
